@@ -16,7 +16,7 @@ module Pipedrive
 
     include HTTParty
     
-    base_uri 'api.pipedrive.com/v1'
+    base_uri 'https://api.pipedrive.com/v1'
     headers HEADERS
     format :json
 
@@ -72,8 +72,8 @@ module Pipedrive
       # Examines a bad response and raises an appropriate exception
       #
       # @param [HTTParty::Response] response
-      def bad_response(response, params={})
-        puts params.inspect
+      def bad_response(response)
+        puts response.inspect
         if response.class == HTTParty::Response
           raise HTTParty::ResponseError, response
         end
@@ -94,7 +94,7 @@ module Pipedrive
           end
           data
         else
-          bad_response(res,attrs)
+          bad_response(res)
         end
       end
 
@@ -104,18 +104,18 @@ module Pipedrive
           res['data'] = opts.merge res['data']
           new(res)
         else
-          bad_response(res,opts)
+          bad_response(res)
         end
       end
       
       def find(id)
         res = get "#{resource_path}/#{id}"
-        res.ok? ? new(res) : bad_response(res,id)
+        res.ok? ? new(res) : bad_response(res)
       end
 
       def find_by_name(name, opts={})
         res = get "#{resource_path}/find", :query => { :term => name }.merge(opts)
-        res.ok? ? new_list(res) : bad_response(res,{:name => name}.merge(opts))
+        res.ok? ? new_list(res) : bad_response(res)
       end
 
       def resource_path
