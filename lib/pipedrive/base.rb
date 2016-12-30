@@ -59,6 +59,11 @@ module Pipedrive
       end
     end
 
+    def destroy
+      res = delete "#{resource_path}/#{id}"
+      res.success?
+    end
+
     class << self
       # Sets the authentication credentials in a class variable.
       #
@@ -82,6 +87,11 @@ module Pipedrive
 
       def new_list( attrs )
         attrs['data'].is_a?(Array) ? attrs['data'].map {|data| self.new( 'data' => data ) } : []
+      end
+
+      def delete_all(ids)
+        res = delete resource_path, body: ids.join(',')
+        res.success?
       end
 
       def all(response = nil, options={},get_absolutely_all=false)
