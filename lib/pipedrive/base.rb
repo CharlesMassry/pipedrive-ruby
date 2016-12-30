@@ -94,7 +94,7 @@ module Pipedrive
       end
 
       def delete_all(ids)
-        res = delete resource_path, body: ids.join(',')
+        res = delete resource_path, body: { ids: ids.join(',') }
         if res.success?
           true
         else
