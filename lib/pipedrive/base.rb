@@ -61,7 +61,11 @@ module Pipedrive
 
     def destroy
       res = delete "#{resource_path}/#{id}"
-      res.success?
+      if res.success?
+        true
+      else
+        bad_response(res)
+      end
     end
 
     class << self
@@ -91,7 +95,11 @@ module Pipedrive
 
       def delete_all(ids)
         res = delete resource_path, body: ids.join(',')
-        res.success?
+        if res.success?
+          true
+        else
+          bad_response(res)
+        end
       end
 
       def all(response = nil, options={},get_absolutely_all=false)
